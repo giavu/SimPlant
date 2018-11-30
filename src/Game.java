@@ -50,16 +50,16 @@ class Game {
     }
   }
 
-  private void revertState() {
+  private synchronized void revertState() {
     gameState = lastState;
   }
 
-  private void setState(GameState newState) {
+  private synchronized void setState(GameState newState) {
     lastState = gameState;
     gameState = newState;
   }
 
-  private String gameIsOn(String command) {
+  private synchronized String gameIsOn(String command) {
     switch ( command ) {
 
       // PLANT COMMANDS
@@ -97,58 +97,58 @@ class Game {
     }
   }
 
-  private String doAction(PlantAction action) {
+  private synchronized String doAction(PlantAction action) {
     return checkForDead(plant.action(action));
   }
 
-  private String checkForDead(String message) {
+  private synchronized String checkForDead(String message) {
     if ( plant.isDead() ) {
       onDead();
     }
     return message;
   }
 
-  private void onDead() {
+  private synchronized void onDead() {
     int age = plant.getAge();
     if ( age > oldestPlant ) oldestPlant = age;
     setState(GameState.GAME_OVER);
   }
 
-  private String helpMessage() {
+  private synchronized String helpMessage() {
     return "You can \'water\', \'feed', \'spray\' or \'check\' your plant. \n " +
            "You can also \'kill\' your plant to start again.";
   }
 
-  private String getUnknownCommandResponse(String message) {
+  private synchronized String getUnknownCommandResponse(String message) {
     return (message.length() == 0 ?
                 "Please send a command. " :
                 "I don't know how to '" + message + "'. "
            ) + getHowToGetHelp();
   }
 
-  private String getHowToGetHelp() {
+  private synchronized String getHowToGetHelp() {
     return "(Send 'help' for help!)";
   }
 
   // asks to confirm starting a new plant (new players)
-  private String newPlayer() {
+  private synchronized String newPlayer() {
     return "Welcome to SimPlant! " + askNew();
   }
 
   // asks to confirm starting a new plant (returning players)
-  private String gameOver() {
+  private synchronized String gameOver() {
     return "Your oldest plant was " + Plant.ageString(oldestPlant) + ". "
            + askNew();
   }
 
   // asks to confirm starting a new plant
-  private String askNew() {
+  private synchronized String askNew() {
     setState(GameState.CONFIRM_NEW);
     return "Would you like to grow a new plant?";
   }
 
   // starts a new plant
-  private String confirmNew() {
+  private synchronized String confirmNew() {
     setState(GameState.GAME_IS_ON);
     plant = new Plant();
     return "You have a new plant! " +
@@ -158,26 +158,26 @@ class Game {
   }
 
   // returns to previous state
-  private String abortNew() {
+  private synchronized String abortNew() {
     revertState();
     return "Let me know when you change your mind! (Any text will do.)";
   }
 
   // asks to confirm quitting a plant
-  private String requestQuit() {
+  private synchronized String requestQuit() {
     setState(GameState.CONFIRM_QUIT);
     return "Are you sure you want to quit the game? " +
            "(Your plant will be lost!)";
   }
 
   // returns to previous state
-  private String abortQuit() {
+  private synchronized String abortQuit() {
     revertState();
     return "Ok good. " + doAction(PlantAction.CHECK);
   }
 
   // quits the game
-  private String confirmQuit() {
+  private synchronized String confirmQuit() {
     onDead();
     setState(GameState.GAME_OVER);
     return gameOver();

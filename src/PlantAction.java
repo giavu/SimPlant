@@ -11,7 +11,7 @@ public enum PlantAction {
     this.feedback = feedback;
   }
 
-  public String getFeedback() {
+  public synchronized String getFeedback() {
     return feedback;
   }
 }

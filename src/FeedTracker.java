@@ -89,12 +89,12 @@ public class FeedTracker extends Tracker {
   }
 
   @Override
-  public String toString() {
+  public synchronized String toString() {
     return super.toString("Feed ");
   }
 
   @Override
-  public String getLevelCode() {
+  public synchronized String getLevelCode() {
     return super.getLevelCode("f");
   }
 

@@ -20,6 +20,14 @@ class Controller implements Messageable {
     Thread httpServer = new Thread(new HttpServer(this));
     httpServer.start();
 
+    try {
+      promptServer.join();
+      httpServer.join();
+
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+
   }
 
   @Override

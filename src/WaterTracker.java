@@ -105,12 +105,12 @@ class WaterTracker extends Tracker {
   }
 
   @Override
-  public String toString() {
+  public synchronized String toString() {
     return super.toString("Water ");
   }
 
   @Override
-  public String getLevelCode() {
+  public synchronized String getLevelCode() {
     return super.getLevelCode("w");
   }
 

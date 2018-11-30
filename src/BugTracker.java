@@ -63,14 +63,14 @@ public class BugTracker extends Tracker {
     spray = STARTING_SPRAY_AMOUNT;
   }
 
-  private boolean hasBugs() {
+  private synchronized boolean hasBugs() {
     return getLevel() > 0;
   }
 
   // decrement spray-level every day,
   // calls bugs if spray level is low
   @Override
-  public void step() {
+  public synchronized void step() {
     spray -= 2;
     if ( spray < 0 )
       spray = 0;
@@ -84,7 +84,7 @@ public class BugTracker extends Tracker {
 
   // apply pesticides
   @Override
-  public void apply() {
+  public synchronized void apply() {
     spray += SPRAY_AMOUNT;
     if ( spray > MAX_SPRAY_LEVEL )
       spray = MAX_SPRAY_LEVEL;
@@ -113,12 +113,12 @@ public class BugTracker extends Tracker {
   }
 
   @Override
-  public String toString() {
+  public synchronized String toString() {
     return super.toString("Bug ") + String.format(", Spray level: %02d", spray);
   }
 
   @Override
-  public String getLevelCode() {
+  public synchronized String getLevelCode() {
     return super.getLevelCode("p") + String.format("s%02d", spray);
   }
 

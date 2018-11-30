@@ -31,7 +31,7 @@ public class BloomTracker implements TrackerInterface {
   }
 
   @Override
-  public void step() {
+  public synchronized void step() {
 
     if ( plant.isHealthy() )
       stepsHealthy++;
@@ -43,7 +43,7 @@ public class BloomTracker implements TrackerInterface {
 
   }
 
-  private void updateBlooming() {
+  private synchronized void updateBlooming() {
 
     if ( isBlooming() ) { // blooming
 
@@ -65,12 +65,12 @@ public class BloomTracker implements TrackerInterface {
   }
 
   @Override
-  public void apply() {
+  public synchronized void apply() {
     throw new UnsupportedOperationException("Cannot apply bloom.");
   }
 
   @Override
-  public String getStatus() {
+  public synchronized String getStatus() {
     if ( isBlooming() )
       return "It has been blooming for " +
              (stepsBlooming == 0 ?
@@ -84,25 +84,25 @@ public class BloomTracker implements TrackerInterface {
   }
 
   @Override
-  public boolean isHealthy() {
+  public synchronized boolean isHealthy() {
     return true; // will never make plant unhealthy
   }
 
   @Override
-  public boolean isDead() {
+  public synchronized boolean isDead() {
     return false; // will never make plant dead
   }
 
   @Override
-  public String getCauseOfDeath() {
+  public synchronized String getCauseOfDeath() {
     return null; // will never make plant dead
   }
 
-  private boolean isBlooming() {
+  private synchronized boolean isBlooming() {
     return stepsBlooming >= 0;
   }
 
-  public String getLevelCode() {
+  public synchronized String getLevelCode() {
     return String.format("b%02d,h%02d", stepsBlooming, stepsHealthy);
   }
 }
